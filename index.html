@@ -34,8 +34,8 @@
         const type = document.getElementById("captchaType").value;
         const container = document.getElementById("captchaContainer");
         container.innerHTML = type === "recaptcha"
-            ? '<div class="g-recaptcha" data-sitekey="ВАШ_КЛЮЧ_RECAPTCHA"></div>'
-            : '<div class="h-captcha" data-sitekey="ВАШ_КЛЮЧ_HCAPTCHA"></div>';
+            ? '<div class="g-recaptcha" data-sitekey=""></div>'
+            : '<div class="h-captcha" data-sitekey=""></div>';
         grecaptcha.render && grecaptcha.render(container.firstChild);
         hcaptcha.render && hcaptcha.render(container.firstChild);
     }
