@@ -10,38 +10,51 @@
 <body>
 <h1>Проверка капчи</h1>
 <label>
-  Токен:
-  <input type="text" id="token" placeholder="Введите токен">
+  Site Key:
+  <input type="text" id="siteKey" placeholder="Введите site key">
 </label>
+<button onclick="loadCaptcha()">Загрузить капчу</button>
 <br>
 <label>
   Выберите капчу:
-  <select id="captchaType" onchange="switchCaptcha()">
+  <select id="captchaType" onchange="loadCaptcha()">
     <option value="recaptcha">reCAPTCHA</option>
     <option value="hcaptcha">hCaptcha</option>
   </select>
 </label>
 <br>
-<div id="captchaContainer">
-  <div class="g-recaptcha" data-sitekey="ВАШ_КЛЮЧ_RECAPTCHA"></div>
-</div>
+<div id="captchaContainer"></div>
 <br>
-<button onclick="submitForm()">Отправить</button>
-<p>Результат: <span id="result"></span></p>
+<label>
+  Токен:
+  <input type="text" id="token" placeholder="Введите токен">
+</label>
+<button onclick="submitToken()">Отправить токен</button>
+<p>Результат: <br/><span id="result"></span></p>
 
 <script>
-    function switchCaptcha() {
+    function loadCaptcha() {
         const type = document.getElementById("captchaType").value;
+        const siteKey = document.getElementById("siteKey").value;
         const container = document.getElementById("captchaContainer");
+
+        if (!siteKey) {
+            alert("Введите site key!");
+            return;
+        }
+
         container.innerHTML = type === "recaptcha"
-            ? '<div class="g-recaptcha" data-sitekey=""></div>'
-            : '<div class="h-captcha" data-sitekey=""></div>';
-        grecaptcha.render && grecaptcha.render(container.firstChild);
-        hcaptcha.render && hcaptcha.render(container.firstChild);
+            ? `<div class="g-recaptcha" data-sitekey="${siteKey}"></div>`
+            : `<div class="h-captcha" data-sitekey="${siteKey}"></div>`;
+
+        if (type === "recaptcha") {
+            grecaptcha.render(container.firstChild);
+        } else {
+            hcaptcha.render(container.firstChild);
+        }
     }
 
-    function submitForm() {
-        const tokenInput = document.getElementById("token").value;
+    function submitToken() {
         const type = document.getElementById("captchaType").value;
         let captchaResponse = type === "recaptcha"
             ? grecaptcha.getResponse()
