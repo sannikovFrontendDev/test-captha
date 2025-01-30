@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Проверка капчи</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+</head>
+<body>
+<h1>Проверка капчи</h1>
+<label>
+  Токен:
+  <input type="text" id="token" placeholder="Введите токен">
+</label>
+<br>
+<label>
+  Выберите капчу:
+  <select id="captchaType" onchange="switchCaptcha()">
+    <option value="recaptcha">reCAPTCHA</option>
+    <option value="hcaptcha">hCaptcha</option>
+  </select>
+</label>
+<br>
+<div id="captchaContainer">
+  <div class="g-recaptcha" data-sitekey="ВАШ_КЛЮЧ_RECAPTCHA"></div>
+</div>
+<br>
+<button onclick="submitForm()">Отправить</button>
+<p>Результат: <span id="result"></span></p>
+
+<script>
+    function switchCaptcha() {
+        const type = document.getElementById("captchaType").value;
+        const container = document.getElementById("captchaContainer");
+        container.innerHTML = type === "recaptcha"
+            ? '<div class="g-recaptcha" data-sitekey="ВАШ_КЛЮЧ_RECAPTCHA"></div>'
+            : '<div class="h-captcha" data-sitekey="ВАШ_КЛЮЧ_HCAPTCHA"></div>';
+        grecaptcha.render && grecaptcha.render(container.firstChild);
+        hcaptcha.render && hcaptcha.render(container.firstChild);
+    }
+
+    function submitForm() {
+        const tokenInput = document.getElementById("token").value;
+        const type = document.getElementById("captchaType").value;
+        let captchaResponse = type === "recaptcha"
+            ? grecaptcha.getResponse()
+            : hcaptcha.getResponse();
+
+        document.getElementById("result").textContent = captchaResponse || "Нет ответа";
+    }
+</script>
+</body>
+</html>
